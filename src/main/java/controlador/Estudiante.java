@@ -9,5 +9,5 @@ package controlador;
  * @author user
  */
 public class Estudiante {
-    
+
 }
