@@ -1,10 +1,10 @@
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package vista;
 
-import controlador.ConexionBDD;
+import controlador.MenuControlador;
 
 /**
  *
@@ -13,7 +13,15 @@ import controlador.ConexionBDD;
 public class Main {
 
     public static void main(String[] args) {
-        ConexionBDD c=new ConexionBDD();
-        c.conectar();
+
+//        RegistrarUsuario registrarUsuario = new RegistrarUsuario();
+//        Usuario usuario = new Usuario();
+//        RegistroUsuarioControlador usuarioControlador = new RegistroUsuarioControlador(usuario, registrarUsuario);
+//        usuarioControlador.iniciar();
+
+            MenuVista mv=new MenuVista();
+            MenuControlador mc=new MenuControlador(mv);
+            mc.iniciar();
+
     }
- }   
+}

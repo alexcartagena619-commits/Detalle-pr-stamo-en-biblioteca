@@ -8,6 +8,6 @@ package controlador;
  *
  * @author user
  */
-public class Estudiante {
-
+public class IniciarSesion {
+    
 }

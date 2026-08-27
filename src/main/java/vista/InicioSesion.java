@@ -4,6 +4,10 @@
  */
 package vista;
 
+import controlador.BibliotecarioControlador;
+import javax.swing.JOptionPane;
+import modelo.Bibliotecario;
+
 /**
  *
  * @author user
@@ -114,7 +118,24 @@ public class InicioSesion extends javax.swing.JFrame {
     }//GEN-LAST:event_txtUsuarioLoginActionPerformed
 
     private void btnIngresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIngresarActionPerformed
-        // TODO add your handling code here:
+//        String cedula = txtUsuarioLogin.getText();
+//        String contrasena = new String(pwdContraseña.getPassword());
+//
+//        if (cedula.isEmpty() || contrasena.isEmpty()) {
+//            JOptionPane.showMessageDialog(this, "Debe ingresar cedula y contraseña");
+//            return;
+//        }
+//
+//        BibliotecarioControlador controlador = new BibliotecarioControlador();
+//        Bibliotecario bibliotecario = controlador.iniciarSesion(cedula);
+//
+//        if (bibliotecario != null) {
+//            Biblioteca vista = new Biblioteca();
+//            vista.setVisible(true);
+//            this.dispose();
+//        } else {
+//            JOptionPane.showMessageDialog(this, "Credenciales incorrectas");
+//        }
     }//GEN-LAST:event_btnIngresarActionPerformed
 
     /**
