@@ -4,8 +4,11 @@
  */
 package controlador;
 
+import modelo.Libro;
+import modelo.Usuario;
 import vista.MenuVista;
 import vista.RegistrarDevolucion;
+import vista.RegistrarLibro;
 import vista.RegistrarPrestamo;
 import vista.RegistrarUsuario;
 
@@ -30,8 +33,10 @@ public class MenuControlador {
     }
 
     public void irRegistrarUsuario() {
-        RegistrarUsuario ru = new RegistrarUsuario();
-        ru.setVisible(true);
+        RegistrarUsuario vista = new RegistrarUsuario();
+        Usuario modelo = new Usuario();
+        RegistroUsuarioControlador controlador = new RegistroUsuarioControlador(modelo, vista);
+        controlador.iniciar();
     }
 
     public void irDevolucion() {
@@ -40,8 +45,10 @@ public class MenuControlador {
     }
 
     public void irRegistrarLibro() {
-//         RegistrarLibro rl = new RegistrarLibro();
-//         rl.setVisible(true);
+         RegistrarLibro vista = new RegistrarLibro();
+         Libro modelo = new Libro();
+         LibroControlador controlador = new LibroControlador(modelo, vista);
+         controlador.iniciar();
     }
 
     public void iniciar() {

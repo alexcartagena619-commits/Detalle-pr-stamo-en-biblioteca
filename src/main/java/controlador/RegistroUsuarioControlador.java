@@ -60,6 +60,11 @@ public class RegistroUsuarioControlador {
     public void cargarComboTipos() {
         vista.getCmbTipoUsuario().removeAllItems();
         ArrayList<TipoUsuario> tipos = listarTiposUsuario();
+        if (tipos.isEmpty()) {
+            vista.getCmbTipoUsuario().addItem("Estudiante");
+            vista.getCmbTipoUsuario().addItem("Docente");
+            return;
+        }
         for (TipoUsuario t : tipos) {
             String tipo = t.getTipo();
             if (vista.getCmbTipoUsuario().getItemCount() == 0 || !tipoUsuario(tipo)) {
@@ -80,7 +85,7 @@ public class RegistroUsuarioControlador {
     public boolean guardarUsuario() {
         String cedula = vista.getTxtCedula().getText();
         String nombres = vista.getTxtNombres().getText();
-        String apellidos = vista.getTxtDireccion().getText();
+        String apellidos = vista.getTxtApellidos().getText();
         String email = vista.getTxtEmail().getText();
         String telefono = vista.getTxtTelefono().getText();
 
@@ -159,6 +164,25 @@ public class RegistroUsuarioControlador {
         }
     }
 
+    public void eliminarUsuarioVista() {
+        String idTexto = vista.getTxtEliminar().getText().trim();
+
+        if (idTexto.isEmpty()) {
+            JOptionPane.showMessageDialog(vista, "Ingrese el ID del usuario a eliminar");
+            return;
+        }
+
+        int idUsuario = Integer.parseInt(idTexto);
+
+        if (eliminarUsuario(idUsuario)) {
+            JOptionPane.showMessageDialog(vista, "Usuario eliminado correctamente");
+            vista.getTxtEliminar().setText("");
+            cargarTabla();
+        } else {
+            JOptionPane.showMessageDialog(vista, "No se pudo eliminar el usuario, verifique el ID");
+        }
+    }
+
     public boolean actualizarUsuario(Usuario usuario) {
         String sql = "UPDATE usuario SET cedula=?, nombres=?, apellidos=?, telefono=?, correo=? WHERE id_usuario=?";
 
@@ -205,7 +229,7 @@ public class RegistroUsuarioControlador {
     public void limpiarCampos() {
         vista.getTxtCedula().setText("");
         vista.getTxtNombres().setText("");
-        vista.getTxtDireccion().setText("");
+        vista.getTxtApellidos().setText("");
         vista.getTxtEmail().setText("");
         vista.getTxtTelefono().setText("");
 //        vista.getCmbTipoUsuario().addItem(item);

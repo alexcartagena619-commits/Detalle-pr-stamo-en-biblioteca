@@ -14,14 +14,11 @@ public class Main {
 
     public static void main(String[] args) {
 
-//        RegistrarUsuario registrarUsuario = new RegistrarUsuario();
-//        Usuario usuario = new Usuario();
-//        RegistroUsuarioControlador usuarioControlador = new RegistroUsuarioControlador(usuario, registrarUsuario);
-//        usuarioControlador.iniciar();
+//        IniciarSesion inicioSesionControlador = new IniciarSesion();
+//        inicioSesionControlador.iniciar();
 
             MenuVista mv=new MenuVista();
             MenuControlador mc=new MenuControlador(mv);
             mc.iniciar();
-
     }
 }

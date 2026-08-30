@@ -9,7 +9,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 import modelo.Libro;
+import vista.RegistrarLibro;
 
 /**
  *
@@ -25,6 +28,68 @@ public class LibroControlador {
     PreparedStatement ejecutar;
     //OBTENER RESULTADOS DE LA CONSULTA
     ResultSet resultado;
+
+    //ATRIBUTO DEL MODELO
+    private Libro libro;
+    //ATRIBUTO DE LA VISTA
+    private RegistrarLibro vista;
+
+    public LibroControlador(Libro libro, RegistrarLibro vista) {
+        this.libro = libro;
+        this.vista = vista;
+    }
+
+    public void iniciar() {
+        vista.setControlador(this);
+        vista.setVisible(true);
+        cargarTabla();
+    }
+
+    public void cargarTabla() {
+        DefaultTableModel modelo = new DefaultTableModel();
+        modelo.setColumnIdentifiers(new Object[]{"ID", "Titulo", "Autor", "Editorial", "Stock", "Descripcion"});
+        ArrayList<Libro> libros = listarLibros();
+        for (Libro l : libros) {
+            modelo.addRow(new Object[]{l.getIdLibro(), l.getTitulo(), l.getAutor(), l.getEditorial(), l.getStock(), l.getDescripcion()});
+        }
+        vista.getTblLibros().setModel(modelo);
+    }
+
+    public void limpiarCampos() {
+        vista.getTxtTituloLibro().setText("");
+        vista.getTxtAutor().setText("");
+        vista.getTxtEditorial().setText("");
+        vista.getTxtCantidad().setText("");
+        vista.getTxtDescripcion().setText("");
+    }
+
+    public void guardarLibro() {
+        String titulo = vista.getTxtTituloLibro().getText();
+        String autor = vista.getTxtAutor().getText();
+        String editorial = vista.getTxtEditorial().getText();
+        String cantidad = vista.getTxtCantidad().getText();
+        String descripcion = vista.getTxtDescripcion().getText();
+
+        if (titulo.isEmpty() || autor.isEmpty()) {
+            JOptionPane.showMessageDialog(vista, "Debe ingresar titulo y autor");
+            return;
+        }
+
+        libro.setTitulo(titulo);
+        libro.setAutor(autor);
+        libro.setEditorial(editorial);
+        if (!cantidad.isEmpty()) {
+            libro.setStock(Integer.parseInt(cantidad));
+        }
+        libro.setDescripcion(descripcion);
+
+        if (guardarLibro(libro)) {
+            cargarTabla();
+            limpiarCampos();
+        } else {
+            JOptionPane.showMessageDialog(vista, "No se pudo guardar el libro");
+        }
+    }
 
     public boolean guardarLibro(Libro libro) {
         String sql = "INSERT INTO libro (titulo, autor, editorial, stock, descripcion) VALUES (?, ?, ?, ?, ?)";
@@ -81,6 +146,25 @@ public class LibroControlador {
         } catch (SQLException e) {
             System.err.println("Error al eliminar libro: " + e.getMessage());
             return false;
+        }
+    }
+
+    public void eliminarLibroVista() {
+        String idTexto = vista.getTxtEliminarLibro().getText().trim();
+
+        if (idTexto.isEmpty()) {
+            JOptionPane.showMessageDialog(vista, "Ingrese el ID del libro a eliminar");
+            return;
+        }
+
+        int idLibro = Integer.parseInt(idTexto);
+
+        if (eliminarLibro(idLibro)) {
+            JOptionPane.showMessageDialog(vista, "Libro eliminado correctamente");
+            vista.getTxtEliminarLibro().setText("");
+            cargarTabla();
+        } else {
+            JOptionPane.showMessageDialog(vista, "No se pudo eliminar el libro, verifique el ID");
         }
     }
 
