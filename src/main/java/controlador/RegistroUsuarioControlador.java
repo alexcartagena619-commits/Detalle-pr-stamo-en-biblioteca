@@ -13,7 +13,7 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import modelo.TipoUsuario;
 import modelo.Usuario;
-import vista.RegistrarUsuario;
+import vista.GestionUsuarios;
 
 /**
  *
@@ -33,9 +33,9 @@ public class RegistroUsuarioControlador {
     //ATRIBUTO DEL MODELO
     private Usuario usuario;
     //ATRIBUTO DE LA VISTA
-    private RegistrarUsuario vista;
+    private GestionUsuarios vista;
 
-    public RegistroUsuarioControlador(Usuario usuario, RegistrarUsuario vista) {
+    public RegistroUsuarioControlador(Usuario usuario, GestionUsuarios vista) {
         this.usuario = usuario;
         this.vista = vista;
     }

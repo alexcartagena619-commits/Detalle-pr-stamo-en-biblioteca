@@ -8,9 +8,9 @@ import modelo.Libro;
 import modelo.Usuario;
 import vista.MenuVista;
 import vista.RegistrarDevolucion;
-import vista.RegistrarLibro;
+import vista.GestionLibros;
 import vista.RegistrarPrestamo;
-import vista.RegistrarUsuario;
+import vista.GestionUsuarios;
 
 /**
  *
@@ -33,7 +33,7 @@ public class MenuControlador {
     }
 
     public void irRegistrarUsuario() {
-        RegistrarUsuario vista = new RegistrarUsuario();
+        GestionUsuarios vista = new GestionUsuarios();
         Usuario modelo = new Usuario();
         RegistroUsuarioControlador controlador = new RegistroUsuarioControlador(modelo, vista);
         controlador.iniciar();
@@ -45,7 +45,7 @@ public class MenuControlador {
     }
 
     public void irRegistrarLibro() {
-         RegistrarLibro vista = new RegistrarLibro();
+         GestionLibros vista = new GestionLibros();
          Libro modelo = new Libro();
          LibroControlador controlador = new LibroControlador(modelo, vista);
          controlador.iniciar();

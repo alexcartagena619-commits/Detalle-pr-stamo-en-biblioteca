@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import modelo.Libro;
-import vista.RegistrarLibro;
+import vista.GestionLibros;
 
 /**
  *
@@ -32,9 +32,9 @@ public class LibroControlador {
     //ATRIBUTO DEL MODELO
     private Libro libro;
     //ATRIBUTO DE LA VISTA
-    private RegistrarLibro vista;
+    private GestionLibros vista;
 
-    public LibroControlador(Libro libro, RegistrarLibro vista) {
+    public LibroControlador(Libro libro, GestionLibros vista) {
         this.libro = libro;
         this.vista = vista;
     }
