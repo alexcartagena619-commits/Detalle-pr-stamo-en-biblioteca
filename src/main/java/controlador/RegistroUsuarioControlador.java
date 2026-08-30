@@ -203,6 +203,115 @@ public class RegistroUsuarioControlador {
         }
     }
 
+    public void ejecutarOpcion() {
+        String opcion = (String) vista.getCbmOpciones().getSelectedItem();
+        if ("Actualizar".equals(opcion)) {
+            actualizarUsuarioVista();
+        } else if ("Eliminar".equals(opcion)) {
+            eliminarUsuarioVista();
+        } else {
+            guardarUsuario();
+        }
+    }
+
+    public void actualizarUsuarioVista() {
+        String idTexto = vista.getTxtEliminar().getText().trim();
+        String cedula = vista.getTxtCedula().getText();
+        String nombres = vista.getTxtNombres().getText();
+        String apellidos = vista.getTxtApellidos().getText();
+        String email = vista.getTxtEmail().getText();
+        String telefono = vista.getTxtTelefono().getText();
+
+        if (idTexto.isEmpty() || cedula.isEmpty() || nombres.isEmpty()) {
+            JOptionPane.showMessageDialog(vista, "Debe ingresar ID, cedula y nombres");
+            return;
+        }
+
+        usuario.setIdUsuario(Integer.parseInt(idTexto));
+        usuario.setCedula(cedula);
+        usuario.setNombres(nombres);
+        usuario.setApellidos(apellidos);
+        usuario.setCorreo(email);
+        usuario.setTelefono(telefono);
+
+        if (actualizarUsuario(usuario)) {
+            JOptionPane.showMessageDialog(vista, "Usuario actualizado correctamente");
+            cargarTabla();
+            limpiarCampos();
+        } else {
+            JOptionPane.showMessageDialog(vista, "No se pudo actualizar el usuario, verifique el ID");
+        }
+    }
+
+    public void buscarUsuarioVista() {
+        String idTexto = vista.getTxtEliminar().getText().trim();
+
+        if (idTexto.isEmpty()) {
+            JOptionPane.showMessageDialog(vista, "Ingrese el ID del usuario a buscar");
+            return;
+        }
+
+        Usuario encontrado = buscarUsuarioPorId(Integer.parseInt(idTexto));
+
+        if (encontrado == null) {
+            JOptionPane.showMessageDialog(vista, "No se encontro el usuario, verifique el ID");
+            return;
+        }
+
+        vista.getTxtCedula().setText(encontrado.getCedula());
+        vista.getTxtNombres().setText(encontrado.getNombres());
+        vista.getTxtApellidos().setText(encontrado.getApellidos());
+        vista.getTxtEmail().setText(encontrado.getCorreo());
+        vista.getTxtTelefono().setText(encontrado.getTelefono());
+
+        seleccionarTipoUsuario(Integer.parseInt(idTexto));
+    }
+
+    public Usuario buscarUsuarioPorId(int idUsuario) {
+        String sql = "SELECT * FROM usuario WHERE id_usuario = ?";
+
+        try {
+            ejecutar = conectado.prepareStatement(sql);
+            ejecutar.setInt(1, idUsuario);
+            resultado = ejecutar.executeQuery();
+
+            if (resultado.next()) {
+                Usuario u = new Usuario();
+                u.setIdUsuario(resultado.getInt("id_usuario"));
+                u.setCedula(resultado.getString("cedula"));
+                u.setNombres(resultado.getString("nombres"));
+                u.setApellidos(resultado.getString("apellidos"));
+                u.setTelefono(resultado.getString("telefono"));
+                u.setCorreo(resultado.getString("correo"));
+                return u;
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Error al buscar usuario: " + e.getMessage());
+        }
+        return null;
+    }
+
+    private void seleccionarTipoUsuario(int idUsuario) {
+        String sql = "SELECT * FROM tipo_usuario WHERE id_usuario = ?";
+
+        try {
+            ejecutar = conectado.prepareStatement(sql);
+            ejecutar.setInt(1, idUsuario);
+            resultado = ejecutar.executeQuery();
+
+            if (resultado.next()) {
+                TipoUsuario tipo = new TipoUsuario();
+                tipo.setEstudiante(resultado.getString("estudiante"));
+                tipo.setDocente(resultado.getString("docente"));
+                vista.getCmbTipoUsuario().setSelectedItem(tipo.getTipo());
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Error al buscar tipo de usuario: " + e.getMessage());
+        }
+    }
+
     public ArrayList<TipoUsuario> listarTiposUsuario() {
         ArrayList<TipoUsuario> lista = new ArrayList<>();
         String sql = "SELECT * FROM tipo_usuario";

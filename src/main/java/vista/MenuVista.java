@@ -42,10 +42,10 @@ public class MenuVista extends javax.swing.JFrame {
 
         btnPrestamo.setText("Registrar Prestamo");
 
-        btnLibro.setText("Registrar Libro");
+        btnLibro.setText("Gestion de Libros");
         btnLibro.addActionListener(this::btnLibroActionPerformed);
 
-        btnUsuario.setText("Registrar Usuario");
+        btnUsuario.setText("Gestion de Usuarios");
         btnUsuario.addActionListener(this::btnUsuarioActionPerformed);
 
         btnDevolucion.setText("Registrar Devolucion");

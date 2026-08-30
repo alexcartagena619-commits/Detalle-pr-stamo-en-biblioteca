@@ -187,4 +187,93 @@ public class LibroControlador {
             return false;
         }
     }
+
+    public void ejecutarOpcion() {
+        String opcion = (String) vista.getCbmOpciones().getSelectedItem();
+        if ("Actualizar".equals(opcion)) {
+            actualizarLibroVista();
+        } else if ("Eliminar".equals(opcion)) {
+            eliminarLibroVista();
+        } else {
+            guardarLibro();
+        }
+    }
+
+    public void actualizarLibroVista() {
+        String idTexto = vista.getTxtEliminarLibro().getText().trim();
+        String titulo = vista.getTxtTituloLibro().getText();
+        String autor = vista.getTxtAutor().getText();
+        String editorial = vista.getTxtEditorial().getText();
+        String cantidad = vista.getTxtCantidad().getText();
+        String descripcion = vista.getTxtDescripcion().getText();
+
+        if (idTexto.isEmpty() || titulo.isEmpty() || autor.isEmpty()) {
+            JOptionPane.showMessageDialog(vista, "Debe ingresar ID, titulo y autor");
+            return;
+        }
+
+        libro.setIdLibro(Integer.parseInt(idTexto));
+        libro.setTitulo(titulo);
+        libro.setAutor(autor);
+        libro.setEditorial(editorial);
+        if (!cantidad.isEmpty()) {
+            libro.setStock(Integer.parseInt(cantidad));
+        }
+        libro.setDescripcion(descripcion);
+
+        if (actualizarLibro(libro)) {
+            JOptionPane.showMessageDialog(vista, "Libro actualizado correctamente");
+            cargarTabla();
+            limpiarCampos();
+        } else {
+            JOptionPane.showMessageDialog(vista, "No se pudo actualizar el libro, verifique el ID");
+        }
+    }
+
+    public void buscarLibroVista() {
+        String idTexto = vista.getTxtEliminarLibro().getText().trim();
+
+        if (idTexto.isEmpty()) {
+            JOptionPane.showMessageDialog(vista, "Ingrese el ID del libro a buscar");
+            return;
+        }
+
+        Libro encontrado = buscarLibroPorId(Integer.parseInt(idTexto));
+
+        if (encontrado == null) {
+            JOptionPane.showMessageDialog(vista, "No se encontro el libro, verifique el ID");
+            return;
+        }
+
+        vista.getTxtTituloLibro().setText(encontrado.getTitulo());
+        vista.getTxtAutor().setText(encontrado.getAutor());
+        vista.getTxtEditorial().setText(encontrado.getEditorial());
+        vista.getTxtCantidad().setText(String.valueOf(encontrado.getStock()));
+        vista.getTxtDescripcion().setText(encontrado.getDescripcion());
+    }
+
+    public Libro buscarLibroPorId(int idLibro) {
+        String sql = "SELECT * FROM libro WHERE id_libro = ?";
+
+        try {
+            ejecutar = conectado.prepareStatement(sql);
+            ejecutar.setInt(1, idLibro);
+            resultado = ejecutar.executeQuery();
+
+            if (resultado.next()) {
+                Libro libro = new Libro();
+                libro.setIdLibro(resultado.getInt("id_libro"));
+                libro.setTitulo(resultado.getString("titulo"));
+                libro.setAutor(resultado.getString("autor"));
+                libro.setEditorial(resultado.getString("editorial"));
+                libro.setStock(resultado.getInt("stock"));
+                libro.setDescripcion(resultado.getString("descripcion"));
+                return libro;
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Error al buscar libro: " + e.getMessage());
+        }
+        return null;
+    }
 }
