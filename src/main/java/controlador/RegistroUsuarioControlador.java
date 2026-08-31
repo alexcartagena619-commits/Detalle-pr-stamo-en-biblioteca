@@ -4,6 +4,7 @@
  */
 package controlador;
 
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -94,6 +95,11 @@ public class RegistroUsuarioControlador {
             return false;
         }
 
+        if (!validarCedula(cedula)) {
+            JOptionPane.showMessageDialog(vista, "Cedula invalida, verifique el numero de cedula");
+            return false;
+        }
+
         usuario.setCedula(cedula);
         usuario.setNombres(nombres);
         usuario.setApellidos(apellidos);
@@ -103,19 +109,18 @@ public class RegistroUsuarioControlador {
         String sql = "INSERT INTO usuario (cedula, nombres, apellidos, telefono, correo) VALUES (?, ?, ?, ?, ?)";
 
         try {
-            ejecutar = conectado.prepareStatement(sql);
-            ejecutar.setString(1, usuario.getCedula());
-            ejecutar.setString(2, usuario.getNombres());
-            ejecutar.setString(3, usuario.getApellidos());
-            ejecutar.setString(4, usuario.getTelefono());
-            ejecutar.setString(5, usuario.getCorreo());
+            CallableStatement cs = conectado.prepareCall("{CALL sp_registrar_usuario(?, ?, ?, ?, ?)}");
+            cs.setString(1, usuario.getCedula());
+            cs.setString(2, usuario.getNombres());
+            cs.setString(3, usuario.getApellidos());
+            cs.setString(4, usuario.getTelefono());
+            cs.setString(5, usuario.getCorreo());
 
-            boolean resultado = ejecutar.executeUpdate() > 0;
+            boolean resultado = cs.executeUpdate() > 0;
 
             if (resultado) {
                 cargarTabla();
                 limpiarCampos();
-            } else {
             }
             return resultado;
 
@@ -123,6 +128,45 @@ public class RegistroUsuarioControlador {
             System.err.println("Error al guardar usuario: " + e.getMessage());
             return false;
         }
+    }
+
+    public boolean validarCedula(String cedula) {
+        if (cedula.length() != 10) {
+            return false;
+        }
+
+        for (int i = 0; i < 10; i++) {
+            if (!Character.isDigit(cedula.charAt(i))) {
+                return false;
+            }
+        }
+
+        int provincia = Integer.parseInt(cedula.substring(0, 2));
+        if (provincia < 1 || provincia > 24) {
+            return false;
+        }
+
+        int tercerDigito = Character.getNumericValue(cedula.charAt(2));
+        if (tercerDigito < 0 || tercerDigito > 5) {
+            return false;
+        }
+
+        int suma = 0;
+        for (int i = 0; i < 9; i++) {
+            int digito = Character.getNumericValue(cedula.charAt(i));
+            int multiplicador = (i % 2 == 0) ? 2 : 1;
+            int producto = digito * multiplicador;
+            if (producto >= 10) {
+                producto -= 9;
+            }
+            suma += producto;
+        }
+
+        int digitoVerificador = Character.getNumericValue(cedula.charAt(9));
+        int decenaSuperior = (int) Math.ceil(suma / 10.0) * 10;
+        int verificadorCalculado = decenaSuperior - suma;
+
+        return verificadorCalculado == digitoVerificador;
     }
 
     public ArrayList<Usuario> listarUsuarios() {
@@ -184,18 +228,16 @@ public class RegistroUsuarioControlador {
     }
 
     public boolean actualizarUsuario(Usuario usuario) {
-        String sql = "UPDATE usuario SET cedula=?, nombres=?, apellidos=?, telefono=?, correo=? WHERE id_usuario=?";
-
         try {
-            ejecutar = conectado.prepareStatement(sql);
-            ejecutar.setString(1, usuario.getCedula());
-            ejecutar.setString(2, usuario.getNombres());
-            ejecutar.setString(3, usuario.getApellidos());
-            ejecutar.setString(4, usuario.getTelefono());
-            ejecutar.setString(5, usuario.getCorreo());
-            ejecutar.setInt(6, usuario.getIdUsuario());
+            CallableStatement cs = conectado.prepareCall("{CALL sp_actualizar_usuario(?, ?, ?, ?, ?, ?)}");
+            cs.setString(1, usuario.getCedula());
+            cs.setString(2, usuario.getNombres());
+            cs.setString(3, usuario.getApellidos());
+            cs.setString(4, usuario.getTelefono());
+            cs.setString(5, usuario.getCorreo());
+            cs.setInt(6, usuario.getIdUsuario());
 
-            return ejecutar.executeUpdate() > 0;
+            return cs.executeUpdate() > 0;
 
         } catch (SQLException e) {
             System.err.println("Error al actualizar usuario: " + e.getMessage());

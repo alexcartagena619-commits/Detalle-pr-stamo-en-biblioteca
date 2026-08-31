@@ -29,7 +29,9 @@ public class MenuControlador {
 
     public void irPrestamo() {
         RegistrarPrestamo rp = new RegistrarPrestamo();
-        rp.setVisible(true);
+        Usuario modelo = new Usuario();
+        PrestamoControlador controlador = new PrestamoControlador(modelo, rp);
+        controlador.iniciar();
     }
 
     public void irRegistrarUsuario() {
@@ -41,7 +43,9 @@ public class MenuControlador {
 
     public void irDevolucion() {
          RegistrarDevolucion rd = new RegistrarDevolucion();
-         rd.setVisible(true);
+         Usuario modelo = new Usuario();
+         DevolucionControlador controlador = new DevolucionControlador(modelo, rd);
+         controlador.iniciar();
     }
 
     public void irRegistrarLibro() {

@@ -4,6 +4,7 @@
  */
 package controlador;
 
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -92,17 +93,15 @@ public class LibroControlador {
     }
 
     public boolean guardarLibro(Libro libro) {
-        String sql = "INSERT INTO libro (titulo, autor, editorial, stock, descripcion) VALUES (?, ?, ?, ?, ?)";
-
         try {
-            ejecutar = conectado.prepareStatement(sql);
-            ejecutar.setString(1, libro.getTitulo());
-            ejecutar.setString(2, libro.getAutor());
-            ejecutar.setString(3, libro.getEditorial());
-            ejecutar.setInt(4, libro.getStock());
-            ejecutar.setString(5, libro.getDescripcion());
+            CallableStatement cs = conectado.prepareCall("{CALL sp_registrar_libro(?, ?, ?, ?, ?)}");
+            cs.setString(1, libro.getTitulo());
+            cs.setString(2, libro.getAutor());
+            cs.setString(3, libro.getEditorial());
+            cs.setInt(4, libro.getStock());
+            cs.setString(5, libro.getDescripcion());
 
-            return ejecutar.executeUpdate() > 0;
+            return cs.executeUpdate() > 0;
 
         } catch (SQLException e) {
             System.err.println("Error al guardar libro: " + e.getMessage());
@@ -169,18 +168,16 @@ public class LibroControlador {
     }
 
     public boolean actualizarLibro(Libro libro) {
-        String sql = "UPDATE libro SET titulo=?, autor=?, editorial=?, stock=?, descripcion=? WHERE id_libro=?";
-
         try {
-            ejecutar = conectado.prepareStatement(sql);
-            ejecutar.setString(1, libro.getTitulo());
-            ejecutar.setString(2, libro.getAutor());
-            ejecutar.setString(3, libro.getEditorial());
-            ejecutar.setInt(4, libro.getStock());
-            ejecutar.setString(5, libro.getDescripcion());
-            ejecutar.setInt(6, libro.getIdLibro());
+            CallableStatement cs = conectado.prepareCall("{CALL sp_actualizar_libro(?, ?, ?, ?, ?, ?)}");
+            cs.setString(1, libro.getTitulo());
+            cs.setString(2, libro.getAutor());
+            cs.setString(3, libro.getEditorial());
+            cs.setInt(4, libro.getStock());
+            cs.setString(5, libro.getDescripcion());
+            cs.setInt(6, libro.getIdLibro());
 
-            return ejecutar.executeUpdate() > 0;
+            return cs.executeUpdate() > 0;
 
         } catch (SQLException e) {
             System.err.println("Error al actualizar libro: " + e.getMessage());
