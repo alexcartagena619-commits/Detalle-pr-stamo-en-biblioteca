@@ -143,17 +143,10 @@ public class DevolucionControlador {
         DefaultTableModel modelo = new DefaultTableModel();
         modelo.setColumnIdentifiers(new Object[]{"ID Prestamo", "Libro", "Cantidad", "Estado Fisico", "Fecha Limite", "ID Detalle", "ID Libro"});
 
-        String sql = "SELECT p.id_prestamo, l.titulo, dp.id_detalle, dp.id_libro, dp.estadoFisico, dp.cantidad, p.fecha_limite_devolucion "
-                + "FROM prestamo p "
-                + "JOIN detalle_prestamo dp ON p.id_prestamo = dp.id_prestamo "
-                + "JOIN libro l ON dp.id_libro = l.id_libro "
-                + "WHERE p.id_tipo_usuario = (SELECT id_tipo_usuario FROM tipo_usuario WHERE id_usuario = ?) "
-                + "AND (p.fecha_devolucion IS NULL OR p.estado != 'Devuelto')";
-
         try {
-            ejecutar = conectado.prepareStatement(sql);
-            ejecutar.setInt(1, idUsuario);
-            resultado = ejecutar.executeQuery();
+            CallableStatement cs = conectado.prepareCall("{CALL sp_prestamos_activos(?)}");
+            cs.setInt(1, idUsuario);
+            resultado = cs.executeQuery();
 
             while (resultado.next()) {
                 modelo.addRow(new Object[]{
@@ -177,17 +170,10 @@ public class DevolucionControlador {
     public void cargarLibrosPrestados(int idUsuario) {
         vista.getCmbLibros().removeAllItems();
 
-        String sql = "SELECT DISTINCT l.id_libro, l.titulo "
-                + "FROM prestamo p "
-                + "JOIN detalle_prestamo dp ON p.id_prestamo = dp.id_prestamo "
-                + "JOIN libro l ON dp.id_libro = l.id_libro "
-                + "WHERE p.id_tipo_usuario = (SELECT id_tipo_usuario FROM tipo_usuario WHERE id_usuario = ?) "
-                + "AND (p.fecha_devolucion IS NULL OR p.estado != 'Devuelto')";
-
         try {
-            ejecutar = conectado.prepareStatement(sql);
-            ejecutar.setInt(1, idUsuario);
-            resultado = ejecutar.executeQuery();
+            CallableStatement cs = conectado.prepareCall("{CALL sp_libros_prestados(?)}");
+            cs.setInt(1, idUsuario);
+            resultado = cs.executeQuery();
 
             while (resultado.next()) {
                 vista.getCmbLibros().addItem(resultado.getString("titulo"));
@@ -208,19 +194,11 @@ public class DevolucionControlador {
         int cantidad = 1;
         String estado = "";
 
-        String sql = "SELECT dp.id_detalle, dp.id_libro, dp.cantidad, dp.estadoFisico "
-                + "FROM prestamo p "
-                + "JOIN detalle_prestamo dp ON p.id_prestamo = dp.id_prestamo "
-                + "JOIN libro l ON dp.id_libro = l.id_libro "
-                + "WHERE l.titulo = ? "
-                + "AND p.id_tipo_usuario = (SELECT id_tipo_usuario FROM tipo_usuario WHERE id_usuario = ?) "
-                + "AND (p.fecha_devolucion IS NULL OR p.estado != 'Devuelto') LIMIT 1";
-
         try {
-            ejecutar = conectado.prepareStatement(sql);
-            ejecutar.setString(1, titulo);
-            ejecutar.setInt(2, usuario != null ? usuario.getIdUsuario() : -1);
-            resultado = ejecutar.executeQuery();
+            CallableStatement cs = conectado.prepareCall("{CALL sp_detalle_libro_prestado(?, ?)}");
+            cs.setInt(1, usuario != null ? usuario.getIdUsuario() : -1);
+            cs.setString(2, titulo);
+            resultado = cs.executeQuery();
 
             if (resultado.next()) {
                 idDetalle = resultado.getInt("id_detalle");
@@ -282,19 +260,11 @@ public class DevolucionControlador {
         int idLibro = -1;
         int cantidadPrestada = 1;
 
-        String sql = "SELECT dp.id_detalle, dp.id_libro, dp.cantidad, p.id_prestamo "
-                + "FROM prestamo p "
-                + "JOIN detalle_prestamo dp ON p.id_prestamo = dp.id_prestamo "
-                + "JOIN libro l ON dp.id_libro = l.id_libro "
-                + "WHERE l.titulo = ? "
-                + "AND p.id_tipo_usuario = (SELECT id_tipo_usuario FROM tipo_usuario WHERE id_usuario = ?) "
-                + "AND (p.fecha_devolucion IS NULL OR p.estado != 'Devuelto') LIMIT 1";
-
         try {
-            ejecutar = conectado.prepareStatement(sql);
-            ejecutar.setString(1, titulo);
-            ejecutar.setInt(2, usuario.getIdUsuario());
-            resultado = ejecutar.executeQuery();
+            CallableStatement cs = conectado.prepareCall("{CALL sp_detalle_libro_prestado(?, ?)}");
+            cs.setInt(1, usuario.getIdUsuario());
+            cs.setString(2, titulo);
+            resultado = cs.executeQuery();
             if (resultado.next()) {
                 idDetalle = resultado.getInt("id_detalle");
                 idLibro = resultado.getInt("id_libro");

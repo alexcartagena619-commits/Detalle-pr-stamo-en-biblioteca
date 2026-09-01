@@ -464,6 +464,10 @@ public class RegistrarPrestamo extends javax.swing.JFrame {
         return btnGuardar;
     }
 
+    public javax.swing.JProgressBar getPrbGuardar() {
+        return prbGuardar;
+    }
+
     public javax.swing.JTextField getTxtDescuento() {
         return txtDescuento;
     }

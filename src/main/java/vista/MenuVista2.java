@@ -12,14 +12,14 @@ import javax.swing.JLabel;
  *
  * @author user
  */
-public class MenuVista extends javax.swing.JFrame {
+public class MenuVista2 extends javax.swing.JFrame {
 
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(MenuVista.class.getName());
+    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(MenuVista2.class.getName());
 
     /**
      * Creates new form MenuVista
      */
-    public MenuVista() {
+    public MenuVista2() {
         initComponents();
     }
 
@@ -141,7 +141,7 @@ public class MenuVista extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new MenuVista().setVisible(true));
+        java.awt.EventQueue.invokeLater(() -> new MenuVista2().setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

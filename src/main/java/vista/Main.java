@@ -4,7 +4,7 @@
  */
 package vista;
 
-import controlador.MenuControlador;
+import controlador.MenuInicialControlador;
 
 /**
  *
@@ -14,11 +14,8 @@ public class Main {
 
     public static void main(String[] args) {
 
-//        IniciarSesion inicioSesionControlador = new IniciarSesion();
-//        inicioSesionControlador.iniciar();
-
-            MenuVista mv=new MenuVista();
-            MenuControlador mc=new MenuControlador(mv);
-            mc.iniciar();
+        Menu vista = new Menu();
+        MenuInicialControlador controlador = new MenuInicialControlador(vista);
+        controlador.iniciar();
     }
 }

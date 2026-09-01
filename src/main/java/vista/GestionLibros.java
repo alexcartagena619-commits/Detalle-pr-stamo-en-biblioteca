@@ -60,8 +60,6 @@ public class GestionLibros extends javax.swing.JFrame {
         lblQuitar = new javax.swing.JLabel();
         lblEliminarLibro = new javax.swing.JLabel();
         txtEliminarLibro = new javax.swing.JTextField();
-        lblEstado = new javax.swing.JLabel();
-        txtEstado = new javax.swing.JTextField();
         cbmOpciones = new javax.swing.JComboBox<>();
         lblOpciones = new javax.swing.JLabel();
         btnBuscar = new javax.swing.JButton();
@@ -104,8 +102,6 @@ public class GestionLibros extends javax.swing.JFrame {
 
         txtEliminarLibro.addActionListener(this::txtEliminarLibroActionPerformed);
 
-        lblEstado.setText("Estado Fisico:");
-
         cbmOpciones.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         lblOpciones.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -124,10 +120,6 @@ public class GestionLibros extends javax.swing.JFrame {
                     .addComponent(jScrollPane1)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(lblEstado)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtEstado))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(lblDescripcion)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -198,7 +190,7 @@ public class GestionLibros extends javax.swing.JFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(25, 25, 25)
                         .addComponent(btnAceptar, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 17, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(txtAutor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -216,11 +208,7 @@ public class GestionLibros extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblDescripcion)
                     .addComponent(txtDescripcion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblEstado)
-                    .addComponent(txtEstado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(14, 14, 14)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -322,7 +310,6 @@ public class GestionLibros extends javax.swing.JFrame {
     private javax.swing.JLabel lblDescripcion;
     private javax.swing.JLabel lblEditorial;
     private javax.swing.JLabel lblEliminarLibro;
-    private javax.swing.JLabel lblEstado;
     private javax.swing.JLabel lblOpciones;
     private javax.swing.JLabel lblQuitar;
     private javax.swing.JLabel lblTitulo;
@@ -333,7 +320,6 @@ public class GestionLibros extends javax.swing.JFrame {
     private javax.swing.JTextField txtDescripcion;
     private javax.swing.JTextField txtEditorial;
     private javax.swing.JTextField txtEliminarLibro;
-    private javax.swing.JTextField txtEstado;
     private javax.swing.JTextField txtTituloLibro;
     // End of variables declaration//GEN-END:variables
 }

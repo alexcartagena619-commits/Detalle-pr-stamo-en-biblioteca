@@ -100,6 +100,12 @@ public class RegistroUsuarioControlador {
             return false;
         }
 
+        String tipoSeleccionado = (String) vista.getCmbTipoUsuario().getSelectedItem();
+        if (tipoSeleccionado == null || tipoSeleccionado.isEmpty()) {
+            JOptionPane.showMessageDialog(vista, "Seleccione el tipo de usuario");
+            return false;
+        }
+
         usuario.setCedula(cedula);
         usuario.setNombres(nombres);
         usuario.setApellidos(apellidos);
@@ -109,12 +115,13 @@ public class RegistroUsuarioControlador {
         String sql = "INSERT INTO usuario (cedula, nombres, apellidos, telefono, correo) VALUES (?, ?, ?, ?, ?)";
 
         try {
-            CallableStatement cs = conectado.prepareCall("{CALL sp_registrar_usuario(?, ?, ?, ?, ?)}");
+            CallableStatement cs = conectado.prepareCall("{CALL sp_registrar_usuario(?, ?, ?, ?, ?, ?)}");
             cs.setString(1, usuario.getCedula());
             cs.setString(2, usuario.getNombres());
             cs.setString(3, usuario.getApellidos());
             cs.setString(4, usuario.getTelefono());
             cs.setString(5, usuario.getCorreo());
+            cs.setString(6, tipoSeleccionado);
 
             boolean resultado = cs.executeUpdate() > 0;
 
@@ -195,15 +202,14 @@ public class RegistroUsuarioControlador {
     }
 
     public boolean eliminarUsuario(int idUsuario) {
-        String sql = "DELETE FROM usuario WHERE id_usuario = ?";
-
         try {
-            ejecutar = conectado.prepareStatement(sql);
-            ejecutar.setInt(1, idUsuario);
-            return ejecutar.executeUpdate() > 0;
+            CallableStatement cs = conectado.prepareCall("{CALL sp_eliminar_usuario(?)}");
+            cs.setInt(1, idUsuario);
+            return cs.executeUpdate() > 0;
 
         } catch (SQLException e) {
             System.err.println("Error al eliminar usuario: " + e.getMessage());
+            JOptionPane.showMessageDialog(vista, e.getMessage());
             return false;
         }
     }
@@ -222,8 +228,6 @@ public class RegistroUsuarioControlador {
             JOptionPane.showMessageDialog(vista, "Usuario eliminado correctamente");
             vista.getTxtEliminar().setText("");
             cargarTabla();
-        } else {
-            JOptionPane.showMessageDialog(vista, "No se pudo eliminar el usuario, verifique el ID");
         }
     }
 

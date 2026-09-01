@@ -6,7 +6,7 @@ package controlador;
 
 import modelo.Libro;
 import modelo.Usuario;
-import vista.MenuVista;
+import vista.MenuVista2;
 import vista.RegistrarDevolucion;
 import vista.GestionLibros;
 import vista.RegistrarPrestamo;
@@ -18,12 +18,12 @@ import vista.GestionUsuarios;
  */
 public class MenuControlador {
 
-    private MenuVista menu;
+    private MenuVista2 menu;
 
     public MenuControlador() {
     }
 
-    public MenuControlador(MenuVista menu) {
+    public MenuControlador(MenuVista2 menu) {
         this.menu = menu;
     }
 

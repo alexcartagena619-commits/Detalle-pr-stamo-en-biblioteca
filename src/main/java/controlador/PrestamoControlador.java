@@ -289,25 +289,61 @@ public class PrestamoControlador {
         this.idPrestamoReciente = idPrestamo;
 
         int filas = modelo.getRowCount();
-        boolean ok = true;
-        for (int i = 0; i < filas; i++) {
-            int idLibro = Integer.parseInt(modelo.getValueAt(i, 0).toString());
-            int cantidad = Integer.parseInt(modelo.getValueAt(i, 2).toString());
-            String estadoFisico = modelo.getValueAt(i, 3).toString();
 
-            boolean guardado = guardarDetalle(idPrestamo, idLibro, cantidad, estadoFisico);
+        javax.swing.SwingWorker<Boolean, Integer> worker = new javax.swing.SwingWorker<Boolean, Integer>() {
+            @Override
+            protected Boolean doInBackground() {
+                vista.getPrbGuardar().setMinimum(0);
+                vista.getPrbGuardar().setMaximum(filas);
+                vista.getPrbGuardar().setValue(0);
 
-            if (!guardado) {
-                ok = false;
+                boolean todosOk = true;
+                for (int i = 0; i < filas; i++) {
+                    int idLibro = Integer.parseInt(modelo.getValueAt(i, 0).toString());
+                    int cantidad = Integer.parseInt(modelo.getValueAt(i, 2).toString());
+                    String estadoFisico = modelo.getValueAt(i, 3).toString();
+
+                    boolean guardado = guardarDetalle(idPrestamo, idLibro, cantidad, estadoFisico);
+                    if (!guardado) {
+                        todosOk = false;
+                    }
+                    publish(i + 1);
+                    try {
+                        Thread.sleep(200);
+                    } catch (InterruptedException ex) {
+                        System.err.println("Hilo interrumpido: " + ex.getMessage());
+                    }
+                }
+                return todosOk;
             }
-        }
 
-        if (ok) {
-            JOptionPane.showMessageDialog(vista, "Prestamo registrado correctamente");
-            modelo.setRowCount(0);
-        } else {
-            JOptionPane.showMessageDialog(vista, "Hubo un error al guardar el detalle del prestamo");
-        }
+            @Override
+            protected void process(java.util.List<Integer> chunks) {
+                for (Integer valor : chunks) {
+                    vista.getPrbGuardar().setValue(valor);
+                    vista.getPrbGuardar().setStringPainted(true);
+                    vista.getPrbGuardar().setString(valor + "/" + filas);
+                }
+            }
+
+            @Override
+            protected void done() {
+                try {
+                    if (get()) {
+                        JOptionPane.showMessageDialog(vista, "Prestamo registrado correctamente");
+                        modelo.setRowCount(0);
+                        vista.getPrbGuardar().setValue(0);
+                        vista.getPrbGuardar().setString("");
+                    } else {
+                        JOptionPane.showMessageDialog(vista, "Hubo un error al guardar el detalle del prestamo");
+                    }
+                } catch (Exception ex) {
+                    System.err.println("Error al guardar: " + ex.getMessage());
+                    JOptionPane.showMessageDialog(vista, "Hubo un error al guardar el detalle del prestamo");
+                }
+            }
+        };
+        worker.execute();
     }
 
     public int getIdTipoUsuario(int idUsuario) {

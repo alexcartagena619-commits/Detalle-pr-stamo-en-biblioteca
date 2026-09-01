@@ -4,22 +4,18 @@
  */
 package vista;
 
-import controlador.BibliotecarioControlador;
-import javax.swing.JOptionPane;
-import modelo.Bibliotecario;
-
 /**
  *
  * @author user
  */
-public class InicioSesion extends javax.swing.JFrame {
+public class InicioDocente extends javax.swing.JFrame implements LogeoVista {
     
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(InicioSesion.class.getName());
+    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(InicioDocente.class.getName());
 
     /**
      * Creates new form PrestamoVista
      */
-    public InicioSesion() {
+    public InicioDocente() {
         initComponents();
     }
 
@@ -138,6 +134,18 @@ public class InicioSesion extends javax.swing.JFrame {
 //        }
     }//GEN-LAST:event_btnIngresarActionPerformed
 
+    public String getTxtUsuario() {
+        return txtUsuarioLogin.getText();
+    }
+
+    public String getPswClave() {
+        return String.valueOf(pwdContraseña.getPassword());
+    }
+
+    public javax.swing.JButton getBtnIngresar() {
+        return btnIngresar;
+    }
+
     /**
      * @param args the command line arguments
      */
@@ -160,7 +168,7 @@ public class InicioSesion extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new InicioSesion().setVisible(true));
+        java.awt.EventQueue.invokeLater(() -> new InicioDocente().setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
